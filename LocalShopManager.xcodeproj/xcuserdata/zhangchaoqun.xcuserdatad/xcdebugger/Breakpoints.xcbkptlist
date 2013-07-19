@@ -26,8 +26,8 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "500"
          endingLineNumber = "500"
-         landmarkName = "-swipeCell:triggeredSwipeWithType:"
-         landmarkType = "5">
+         landmarkName = "@implementation TypeEditViewDelegate"
+         landmarkType = "3">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
@@ -39,8 +39,8 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "204"
          endingLineNumber = "204"
-         landmarkName = "-clickedForChooseOnCell:"
-         landmarkType = "5">
+         landmarkName = "@implementation TypeEditViewDelegate"
+         landmarkType = "3">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
@@ -52,7 +52,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "214"
          endingLineNumber = "214"
-         landmarkName = "-clickedForChooseOnCell:"
+         landmarkName = "-tableShowDataArr"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -65,7 +65,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "227"
          endingLineNumber = "227"
-         landmarkName = "-clickedForChooseOnCell:"
+         landmarkName = "-endEditTypeWithNowTypeData"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -78,7 +78,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "237"
          endingLineNumber = "237"
-         landmarkName = "-clickedForOpenOnCell:"
+         landmarkName = "-clickedForChooseOnCell:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -104,8 +104,8 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "573"
          endingLineNumber = "573"
-         landmarkName = "-totalSubTypesArrayFor:"
-         landmarkType = "5">
+         landmarkName = "@implementation TypeEditViewDelegate"
+         landmarkType = "3">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
