@@ -33,11 +33,91 @@
     }
     return self;
 }
-+(TypeDataObj *)typeDataObjWithTypeName:(NSString *)name
+#pragma mark privateMethods
++(TypeDataObj *)normalTypeObj_another
 {
-    TypeDataObj * obj = [[TypeDataObj alloc] initWithTypeName:name];
-    return [obj autorelease];
+    NSArray * ageArr = [NSArray arrayWithObjects:@"男人",@"女人",@"儿童",@"老年人", nil];
+    NSMutableArray * array = [NSMutableArray array];
+    TypeDataObj * obj = nil;
+    for (NSString * age in ageArr)
+    {
+        obj = [TypeDataObj typeDataObjWithTypeName:age];
+        [array addObject:obj];
+    }
+    
+    TypeDataObj * ageObj = [TypeDataObj typeDataObjWithTypeName:@"年龄"];
+    ageObj.subTypes = array;
+    
+    
+    
+    array = [NSMutableArray array];
+    NSArray * colorArr = [NSArray arrayWithObjects:@"红色",@"黑色",@"白色",@"黑白色",@"深蓝色", nil];
+    for (NSString * name in colorArr)
+    {
+        obj = [TypeDataObj typeDataObjWithTypeName:name];
+        [array addObject:obj];
+    }
+    
+    
+    TypeDataObj * colorObj = [TypeDataObj typeDataObjWithTypeName:@"颜色"];
+    colorObj.subTypes = array;
+    
+    
+    obj = [TypeDataObj typeDataObjWithTypeName:@"精品推荐"];
+    obj.subTypes = [NSArray arrayWithObjects:ageObj,colorObj, nil];
+    
+    return obj;
+    
 }
+
+//递归调用，使得数组能够生成相应的对象，但是数组有限制
++(TypeDataObj *)totalSuperDataObjFromArray:(NSArray *)dataArr
+{
+    TypeDataObj * obj = nil;
+    if ([dataArr count]>0)
+    {
+        obj = [dataArr objectAtIndex:0];
+    }
+    int leavel = obj.typeLeavel;
+    leavel++;
+    
+    NSMutableArray * indexNum = [NSMutableArray array];
+    for (int i=0;i<[dataArr count];i++)
+    {
+        TypeDataObj * newObj = [dataArr objectAtIndex:i];
+        if (newObj.typeLeavel==leavel)
+        {
+            NSNumber * number = [NSNumber numberWithInt:i];
+            [indexNum addObject:number];
+        }
+    }
+    
+    
+    NSMutableArray * subTypes =[NSMutableArray array];
+    for (int i=0;i<[indexNum count];i++ )
+    {
+        NSNumber * start = [indexNum objectAtIndex:i];
+        int length = [dataArr count]-[start intValue];
+        if ([indexNum count]!=i+1)
+        {
+            NSNumber * end = [indexNum objectAtIndex:i+1];
+            length = [end intValue]-[start intValue];
+        }
+        NSRange range = NSMakeRange([start intValue], length);
+        NSArray * subArr = [dataArr subarrayWithRange:range];
+        if ([obj containNext])
+        {
+            TypeDataObj * newObj = [self totalSuperDataObjFromArray:subArr];
+            [subTypes addObject:newObj];
+        }
+    }
+    
+    obj.subTypes = subTypes;
+    return obj;
+}
+
+#pragma mark NSCopying
+
 - (id)copyWithZone:(NSZone *)zone
 {
     TypeDataObj *obj = [[[self class] allocWithZone:zone] init];
@@ -48,6 +128,15 @@
     obj.containNext = NO;
     return [obj autorelease];
 }
+
+#pragma mark ---------
+#pragma publicMethods
++(TypeDataObj *)typeDataObjWithTypeName:(NSString *)name
+{
+    TypeDataObj * obj = [[TypeDataObj alloc] initWithTypeName:name];
+    return [obj autorelease];
+}
+
 //示例类
 +(TypeDataObj *)normalTypeObj
 {
@@ -84,54 +173,7 @@
     return obj;
     
 }
-+(TypeDataObj *)normalTypeObj_another
-{
-    NSArray * ageArr = [NSArray arrayWithObjects:@"男人",@"女人",@"儿童",@"老年人", nil];
-    NSMutableArray * array = [NSMutableArray array];
-    TypeDataObj * obj = nil;
-    for (NSString * age in ageArr)
-    {
-        obj = [TypeDataObj typeDataObjWithTypeName:age];
-        [array addObject:obj];
-    }
-    
-    TypeDataObj * ageObj = [TypeDataObj typeDataObjWithTypeName:@"年龄"];
-    ageObj.subTypes = array;
-    
-    
-    
-    array = [NSMutableArray array];
-    NSArray * colorArr = [NSArray arrayWithObjects:@"红色",@"黑色",@"白色",@"黑白色",@"深蓝色", nil];
-    for (NSString * name in colorArr)
-    {
-        obj = [TypeDataObj typeDataObjWithTypeName:name];
-        [array addObject:obj];
-    }
-    
-    
-    TypeDataObj * colorObj = [TypeDataObj typeDataObjWithTypeName:@"颜色"];
-    colorObj.subTypes = array;
-    
-    
-    obj = [TypeDataObj typeDataObjWithTypeName:@"精品推荐"];
-    obj.subTypes = [NSArray arrayWithObjects:ageObj,colorObj, nil];
-    
-    return obj;
 
-}
-
-
-+(NSArray *)showArrayFromSource:(NSArray *)source
-{
-    NSMutableArray * array = [NSMutableArray array];
-    for (TypeDataObj * obj in source)
-    {
-        TypeDataObj * new = [obj copy];
-        [array addObject:new];
-    }
-    
-    return array;
-}
 
 
 //某一对象的所有子类的数组
@@ -154,22 +196,6 @@
     {
         first.containNext = NO;
     }
-    
-//    for (TypeDataObj * obj in self.subTypes)
-//    {
-//        TypeDataObj * new = [obj copy];
-//        new.typeLeavel = self.typeLeavel+1;
-//
-//        NSArray * subArray = [obj totalSubTypesArray];
-//        //有下级目录
-//        if (subArray&&[subArray count]!=0)
-//        {
-//            new.containNext = YES;
-//        }
-//        [array addObject:new];
-//        [array addObjectsFromArray:subArray];
-//    }
-    
     return array;
 }
 
@@ -195,18 +221,6 @@
     
     return array;
 }
-
-+(void)showNamesFromArr:(NSArray *)array
-{
-    NSMutableString * str = [NSMutableString string];
-    for (int i=0;i<[array count] ;i++ )
-    {
-        TypeDataObj * obj = [array objectAtIndex:i];
-        [str appendFormat:@"%@,",obj.typeName];
-    }
-    NSLog(@"showNamesFromArr %@",str);
-}
-
 
 
 
@@ -277,51 +291,6 @@
     return obj;
 }
 
-+(TypeDataObj *)totalSuperDataObjFromArray:(NSArray *)dataArr
-{
-    TypeDataObj * obj = nil;
-    if ([dataArr count]>0)
-    {
-        obj = [dataArr objectAtIndex:0];
-    }
-    int leavel = obj.typeLeavel;
-    leavel++;
-    
-    NSMutableArray * indexNum = [NSMutableArray array];
-    for (int i=0;i<[dataArr count];i++)
-    {
-        TypeDataObj * newObj = [dataArr objectAtIndex:i];
-        if (newObj.typeLeavel==leavel)
-        {
-            NSNumber * number = [NSNumber numberWithInt:i];
-            [indexNum addObject:number];
-        }
-    }
-    
-    
-    NSMutableArray * subTypes =[NSMutableArray array];
-    for (int i=0;i<[indexNum count];i++ )
-    {
-        NSNumber * start = [indexNum objectAtIndex:i];
-        int length = [dataArr count]-[start intValue];
-        if ([indexNum count]!=i+1)
-        {
-            NSNumber * end = [indexNum objectAtIndex:i+1];
-            length = [end intValue]-[start intValue];
-        }
-        NSRange range = NSMakeRange([start intValue], length);
-        NSArray * subArr = [dataArr subarrayWithRange:range];
-        if ([obj containNext])
-        {
-            TypeDataObj * newObj = [self totalSuperDataObjFromArray:subArr];
-            [subTypes addObject:newObj];
-        }
-    }
-    
-    obj.subTypes = subTypes;
-    return obj;
-}
-
 //根据全部列表数据，返回标示位为0的对象数组
 +(NSArray *)totalRootTypeObjsArrFromTotalDataArray:(NSArray *)dataArr;
 {
@@ -367,6 +336,18 @@
     
     
     return array;
+}
+
+
++(void)showNamesFromArr:(NSArray *)array
+{
+    NSMutableString * str = [NSMutableString string];
+    for (int i=0;i<[array count] ;i++ )
+    {
+        TypeDataObj * obj = [array objectAtIndex:i];
+        [str appendFormat:@"%@,",obj.typeName];
+    }
+    NSLog(@"showNamesFromArr %@",str);
 }
 
 

@@ -184,8 +184,8 @@
     
     dispatch_async(dispatch_get_main_queue(), ^{
         
-        [editDlgObj setSourceArray:totalArr];
-        [selectDlbObj setSourceArray:totalArr];
+        editDlgObj.sourceArray = totalArr;
+        selectDlbObj.sourceArray = totalArr;
         
         [_tableView reloadData];
     });

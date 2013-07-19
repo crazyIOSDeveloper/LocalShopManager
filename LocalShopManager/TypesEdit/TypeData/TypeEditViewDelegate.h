@@ -36,19 +36,14 @@
 
 -(id)initWithArray:(NSArray *)array andDelegate:(id<TypeEditDelegate>)delegate;
 
+//返回当前的展示列表数据
+-(NSArray *)tableShowDataArr;
+
 //设置初始化数组数据
 -(void)startWithShowArray:(NSArray *)array;
 
-//返回当前的列表数据
--(NSArray *)tableShowDataArr;
-
-
--(UITableView *)tableView;
-
+//停止文本编辑
 -(void)stopTypeNameEdit;
-
-//当前数据，挤压后
--(NSArray *)endTypeEditWithNowType;
 
 //当前横列数据
 -(NSArray *)endEditTypeWithNowTypeData;

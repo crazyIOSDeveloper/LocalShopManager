@@ -11,6 +11,8 @@
 #import "TypeDataObj.h"
 @interface TypeEditViewDelegate()
 @property (nonatomic,retain) NSMutableArray * totalArr;
+-(UITableView *)tableView;
+
 @end
 
 @implementation TypeEditViewDelegate
@@ -29,27 +31,17 @@
     
     return self;
 }
-//设置初始化数组数据，主要是为编辑与选择的动画设置
--(void)startWithShowArray:(NSArray *)array
+
+- (void)dealloc
 {
-    [showArr removeAllObjects];
-    [showArr addObjectsFromArray:array];
+    self.sourceArray = nil;
+    
+    [chooseArr release];
+    [showArr release];
+    [super dealloc];
 }
 
-//返回当前的列表数据
--(NSArray *)tableShowDataArr
-{
-    return showArr;
-}
--(UITableView *)tableView
-{
-    if (_delegate&&[_delegate respondsToSelector:@selector(tableViewForTypeEditDelegate)])
-    {
-        return [_delegate tableViewForTypeEditDelegate];
-    }
-    return nil;
-}
-
+//重写设置方法
 -(void)setSourceArray:(NSArray *)data
 {
     if (sourceArr)
@@ -58,7 +50,6 @@
         sourceArr = nil;
     }
     sourceArr = [data retain];
-    
     
     //    NSArray * array =[TypeDataObj totalSubTypesArrayFromArr:data];
     //    self.totalArr = array;
@@ -69,15 +60,17 @@
     [showArr addObjectsFromArray:data];
 }
 
--(void)closeSubCellsForIndexpath:(NSIndexPath *)indexPath inTableView:(UITableView *)table
-{
-    int index = indexPath.row;
-    TypeDataObj * obj = [showArr objectAtIndex:index];
-    int section = indexPath.section;
-    
-    [self closeSubCellsForTypeData:obj inSection:section];
-}
 
+#pragma mark privateMethods
+
+-(UITableView *)tableView
+{
+    if (_delegate&&[_delegate respondsToSelector:@selector(tableViewForTypeEditDelegate)])
+    {
+        return [_delegate tableViewForTypeEditDelegate];
+    }
+    return nil;
+}
 
 -(void)closeSubCellsForTypeData:(TypeDataObj *)obj inSection:(int)section
 {
@@ -100,9 +93,9 @@
     {
         id newObj =[subTypes objectAtIndex:i];
         [self removeSubCellsForTypeData:newObj withChangeContain:NO  withSection:section];
-
+        
     }
-
+    
     [tableView reloadData];
     
 }
@@ -147,7 +140,7 @@
             TypeDataObj * newObj =[subTypes objectAtIndex:i];
             [self removeSubCellsForTypeData:newObj withChangeContain:change  withSection:section];
         }
-
+        
     }
     
     [showArr removeObject:obj];
@@ -155,9 +148,8 @@
     [tableView beginUpdates];
     [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationLeft];
     [tableView endUpdates];
-
+    
 }
-
 
 -(void)openSubCellsFor:(UITableView *)tableView withIndexpath:(NSIndexPath *)indexPath
 {
@@ -197,6 +189,42 @@
     
     [tableView reloadData];
     
+}
+-(void)backInputKeyBoard:(id)sender
+{
+    if (lastCell)
+    {
+        [lastCell endTfdEditName];
+        lastCell = nil;
+    }
+}
+
+
+#pragma mark publicMethods
+
+//设置初始化数组数据，主要是为编辑与选择的动画设置
+-(void)startWithShowArray:(NSArray *)array
+{
+    [showArr removeAllObjects];
+    [showArr addObjectsFromArray:array];
+}
+
+//返回当前的列表数据
+-(NSArray *)tableShowDataArr
+{
+    return showArr;
+}
+
+-(void)stopTypeNameEdit
+{
+    [self backInputKeyBoard:nil];
+}
+
+
+-(NSArray *)endEditTypeWithNowTypeData
+{
+    
+    return totalArr;
 }
 
 #pragma mark TypeChooseClickedDelegate
@@ -668,34 +696,6 @@
     }
     return -1;
 }
--(void)backInputKeyBoard:(id)sender
-{
-    if (lastCell)
-    {
-        [lastCell endTfdEditName];
-        lastCell = nil;
-    }
-}
--(void)stopTypeNameEdit
-{
-    [self backInputKeyBoard:nil];
-}
--(NSArray *)endEditTypeWithNowTypeData
-{
-    
-    return totalArr;
-}
-
-
-//将totalArr里面的数据压缩处理
-//当前数据,压缩处理
--(NSArray *)endTypeEditWithNowType
-{
-    //统计当前数据，返回结果，并存储数据库
-    NSArray * array  = [TypeDataObj totalRootTypeObjsArrFromTotalDataArray:totalArr];
-    return array;
-}
-
 
 //父类型数据，没有子类数组
 -(id)superTypeDataForTypeData:(TypeDataObj *)obj
@@ -740,12 +740,4 @@
 
 
 
-- (void)dealloc
-{
-    self.sourceArray = nil;
-
-    [chooseArr release];
-    [showArr release];
-    [super dealloc];
-}
 @end

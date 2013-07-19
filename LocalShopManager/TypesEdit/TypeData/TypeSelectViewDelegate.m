@@ -29,26 +29,13 @@
     
     return self;
 }
-
-//设置初始化数组数据
--(void)startWithShowArray:(NSArray *)array
+- (void)dealloc
 {
-    [showArr removeAllObjects];
-    [showArr addObjectsFromArray:array];
-}
-
-//返回当前的列表数据
--(NSArray *)tableShowDataArr
-{
-    return showArr;
-}
--(UITableView *)tableView
-{
-    if (_delegate&&[_delegate respondsToSelector:@selector(tableViewForTypeSelectDelegate)])
-    {
-        return [_delegate tableViewForTypeSelectDelegate];
-    }
-    return nil;
+    self.sourceArray = nil;
+    [finishView release];
+    [chooseArr release];
+    [showArr release];
+    [super dealloc];
 }
 
 -(void)setSourceArray:(NSArray *)data
@@ -61,8 +48,8 @@
     sourceArr = [data retain];
     
     
-//    NSArray * array =[TypeDataObj totalSubTypesArrayFromArr:data];
-//    self.totalArr = array;
+    //    NSArray * array =[TypeDataObj totalSubTypesArrayFromArr:data];
+    //    self.totalArr = array;
     self.totalArr = data;
     
     
@@ -70,6 +57,16 @@
     [showArr addObjectsFromArray:data];
 }
 
+
+#pragma mark privateMethods
+-(UITableView *)tableView
+{
+    if (_delegate&&[_delegate respondsToSelector:@selector(tableViewForTypeSelectDelegate)])
+    {
+        return [_delegate tableViewForTypeSelectDelegate];
+    }
+    return nil;
+}
 
 
 -(void)clickenOnFinishedSelected:(id)sender
@@ -80,7 +77,23 @@
     {
         [_delegate endSelectWithChooseTypeArray:chooseArr];
     }
+    
+    if(_delegate&& [_delegate respondsToSelector:@selector(endSelectWithChooseSuperTypesArray:)])
+    {
+        NSMutableArray * supArr = [NSMutableArray array];
+        for (TypeDataObj * obj in chooseArr)
+        {
+            NSMutableArray * eveArr = [NSMutableArray array];
+            NSArray * array = [self superTypesForTypeObj:obj];
+            [eveArr addObject:obj];
+            [eveArr addObjectsFromArray:array];
+            
+            [supArr addObject:eveArr];
+        }
+        [_delegate endSelectWithChooseTypeArray:supArr];
+    }
 }
+
 -(void)openSubCellsFor:(UITableView *)tableView withIndexpath:(NSIndexPath *)indexPath
 {
     //可能删除，也可能增加
@@ -123,6 +136,41 @@
 }
 
 
+
+#pragma mark --------------
+#pragma mark publicMethods
+//设置初始化数组数据
+-(void)startWithShowArray:(NSArray *)array
+{
+    [showArr removeAllObjects];
+    [showArr addObjectsFromArray:array];
+}
+
+//返回当前的列表数据
+-(NSArray *)tableShowDataArr
+{
+    return showArr;
+}
+
+
+//返回父类数据，所有的父类数组，从低到高
+-(NSArray *)superTypesForTypeObj:(TypeDataObj *)data
+{
+    NSMutableArray * array = [NSMutableArray array];
+    if (!data.containNext)
+    {
+        return nil;
+    }
+    
+    while (data)
+    {
+        TypeDataObj * superOjb  = [self superTypeDataForTypeData:data];
+        [array addObject:superOjb];
+        data = superOjb;
+        
+    }
+    return array;
+}
 
 #pragma mark TypeChooseClickedDelegate
 -(void)clickedForChooseOnCell:(UITableViewCell *)cell
@@ -190,6 +238,12 @@
 	cell.indentationLevel = obj.typeLeavel;
     cell.clickedDelegate = self;
     cell.chooseBtn.hidden = obj.containNext;
+    [cell setTypeSelectCellType:NO];
+    
+    if ([chooseArr containsObject:obj])
+    {
+        [cell setTypeSelectCellType:YES];
+    }
     
     
     return cell;
@@ -325,27 +379,52 @@
     return data;
     
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- (void)dealloc
+//父类型数据，没有子类数组
+-(id)superTypeDataForTypeData:(TypeDataObj *)obj
 {
-    self.sourceArray = nil;
-    [finishView release];
-    [chooseArr release];
-    [showArr release];
-    [super dealloc];
+    if (obj.typeLeavel==0)
+    {
+        return nil;
+    }
+    if (!self.totalArr)
+    {
+        self.totalArr=[TypeDataObj totalSubTypesArrayFromArr:sourceArr];
+    }
+    
+    NSMutableArray * array = [NSMutableArray array];
+    int leavel = obj.typeLeavel;
+    for (TypeDataObj * eveObj in  totalArr)
+    {
+        int newLeavel = eveObj.typeLeavel;
+        if (newLeavel<=leavel)
+        {
+            [array addObject:eveObj];
+        }
+    }
+    int index = [array indexOfObject:obj];
+    
+    leavel--;
+    for (int i=index;i>=0;i--)
+    {
+        TypeDataObj * newObj =[array objectAtIndex:i];
+        if (newObj.typeLeavel==leavel)
+        {
+            return newObj;
+            break;
+        }
+    }
+    return nil;
 }
+
+
+
+
+
+
+
+
+
+
+
 @end
 

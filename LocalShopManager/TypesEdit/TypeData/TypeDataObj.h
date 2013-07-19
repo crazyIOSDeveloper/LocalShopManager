@@ -30,17 +30,11 @@
 //示例类
 +(TypeDataObj *)normalTypeObj;
 
-//提供方法，以便产品化
-+(NSArray *)showArrayFromSource:(NSArray *)source;
-
-//所有子类的数组，此方法只能对未进行copy的对象使用
+//返回所有子类的数组，此方法只能对未进行copy的对象使用
 -(NSArray *)totalSubTypesArray;
 
-//对数组取所有值
+//返回所有子类数组，参数数组内对象未经过copy
 +(NSArray *)totalSubTypesArrayFromArr:(NSArray *)array;
-
-+(void)showNamesFromArr:(NSArray *)array;
-
 
 //方便转换为json串//方便数据存储
 -(NSDictionary *)jsonDic;
@@ -48,10 +42,10 @@
 //返回总体数据
 +(TypeDataObj *)totalTypeDataFromJSONDic:(NSDictionary *)dic;
 
-
-
 //根据全部列表数据，返回标示位为0的对象数组
 +(NSArray *)totalRootTypeObjsArrFromTotalDataArray:(NSArray *)dataArr;
+
++(void)showNamesFromArr:(NSArray *)array;
 
 
 @end

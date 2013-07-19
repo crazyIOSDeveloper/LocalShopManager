@@ -8,13 +8,18 @@
 
 #import <Foundation/Foundation.h>
 #import "TypeSelectCell.h"
-
+@class TypeDataObj;
 @protocol TypeSelectDelegate <NSObject>
 
 -(UITableView *)tableViewForTypeSelectDelegate;
 
 @optional
+
+//选中数据的数组
 -(void)endSelectWithChooseTypeArray:(NSArray *)array;
+
+//选中数据的数组，和其父类的数组
+-(void)endSelectWithChooseSuperTypesArray:(NSArray *)array;
 
 @end
 
@@ -43,7 +48,10 @@
 //返回当前的列表数据
 -(NSArray *)tableShowDataArr;
 
--(UITableView *)tableView;
+//返回父类数据，所有的父类数组，从低到高
+-(NSArray *)superTypesForTypeObj:(TypeDataObj *)data;
+
+
 
 
 
