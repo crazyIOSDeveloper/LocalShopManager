@@ -73,51 +73,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "LocalShopManager/TypesEdit/TypeData/TypeEditViewDelegate.m"
-         timestampString = "395742891.432545"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "163"
-         endingLineNumber = "163"
-         landmarkName = "-openSubCellsFor:withIndexpath:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "LocalShopManager/TypesEdit/TypeData/TypeEditViewDelegate.m"
          timestampString = "395743032.979544"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "237"
          endingLineNumber = "237"
          landmarkName = "-clickedForOpenOnCell:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "LocalShopManager/TypesEdit/TypeData/TypeEditViewDelegate.m"
-         timestampString = "395742891.432545"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "173"
-         endingLineNumber = "173"
-         landmarkName = "-openSubCellsFor:withIndexpath:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "LocalShopManager/TypesEdit/TypeData/TypeEditViewDelegate.m"
-         timestampString = "395742446.286296"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "83"
-         endingLineNumber = "83"
-         landmarkName = "-closeSubCellsForTypeData:inSection:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -131,19 +92,6 @@
          startingLineNumber = "174"
          endingLineNumber = "174"
          landmarkName = "-readLocalSortTypes:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "LocalShopManager/TypesEdit/TypeData/TypeDataObj.m"
-         timestampString = "395797652.65828"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "200"
-         endingLineNumber = "200"
-         landmarkName = "+showNamesFromArr:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
